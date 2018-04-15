@@ -1,4 +1,5 @@
 import pymysql.cursors
+import word_entry_producer as producer
 
 # Connect to the database
 connection = pymysql.connect(host='localhost',
@@ -14,6 +15,7 @@ def insert_word(connection, user_id, word):
 		sql = "INSERT INTO `word_entries` (`user_id`, `word`) VALUES (%s, %s)"
 		cursor.execute(sql, (user_id, word))
 		connection.commit()
+		producer.produce_word_entry(user_id, word)
 
 def get_recent_words(connection, user_id):
 	with connection.cursor() as cursor:
