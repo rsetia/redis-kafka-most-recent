@@ -17,7 +17,6 @@ def insert_word(connection, user_id, word):
 
 def get_recent_words(connection, user_id):
 	with connection.cursor() as cursor:
-        # Read a single record
 		sql = "SELECT * FROM `word_entries` where `user_id` = %s order by `created_at` desc limit 10"
 		cursor.execute(sql, (user_id, ))
 		return cursor.fetchall()
@@ -25,6 +24,7 @@ def get_recent_words(connection, user_id):
 try:
 	insert_word(connection, 1, "orange")
 	result = get_recent_words(connection, 1) 
-	print(result)
+	mapped = list(map(lambda x: x['created_at'], result))
+	print(mapped)
 finally:
     connection.close()
