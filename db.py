@@ -11,15 +11,15 @@ def get_connection():
                              cursorclass=pymysql.cursors.DictCursor)
 	return connection
 
-def insert_word(user_id, word):
+def insert_word(word_entry):
+	user_id = word_entry['user_id']
+	word = word_entry['word']
 	connection = get_connection()
 	with connection.cursor() as cursor:
 		# Create a new record
 		sql = "INSERT INTO `word_entries` (`user_id`, `word`) VALUES (%s, %s)"
 		cursor.execute(sql, (user_id, word))
 		connection.commit()
-		producer.produce_word_entry(user_id, word)
-	
 	connection.close
 
 def get_recent_words(user_id):

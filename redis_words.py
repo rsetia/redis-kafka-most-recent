@@ -10,13 +10,12 @@ def r():
 def get_key(user_id):
 	return f"recent_words:{user_id}"
 
-# zrevrange key N
 def get_latest_words(user_id):
 	return r().zrevrange(get_key(user_id), 0, 5)	
 
 add_word_and_trim_script = None
 
-def push_word_entry(user_id, word_entry):
+def push_word_entry(word_entry):
 	global add_word_and_trim_script
 
 	if add_word_and_trim_script == None:
@@ -27,12 +26,9 @@ def push_word_entry(user_id, word_entry):
 			return value"""
 		add_word_and_trim_script = r().register_script(lua)
 	
+	key = get_key(word_entry["user_id"])
 	score = current_milli_time()
 	member = word_entry
-	max_size = -4
-	return add_word_and_trim_script(keys=[get_key(user_id)], args=[score, member, max_size])
-
-
-word_entry = { "foo" : random.choice("abcdefghijklmnopqrstuvwxyz") } 
-print(push_word_entry(1, word_entry))
-print(get_latest_words(1))
+	max_size = 3 
+	trim = -1 * (max_size + 1)
+	return add_word_and_trim_script(keys=[key], args=[score, member, trim])
