@@ -27,6 +27,7 @@ def get_recent_words(user_id):
 	with connection.cursor() as cursor:
 		sql = "SELECT * FROM `word_entries` where `user_id` = %s order by `created_at` desc limit 10"
 		cursor.execute(sql, (user_id, ))
-		return cursor.fetchall()
+		items = cursor.fetchall()
 	connection.close
+	return items
 
