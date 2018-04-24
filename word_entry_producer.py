@@ -3,9 +3,8 @@ from kafka.errors import KafkaError
 import json
 
 def on_send_success(record_metadata):
-    print(record_metadata.topic)
-    print(record_metadata.partition)
-    print(record_metadata.offset)
+	print ("PRODUCER: %s:%d:%d" %
+		(record_metadata.topic, record_metadata.partition, record_metadata.offset))
 
 def on_send_error(excp):
     log.error('I am an errback', exc_info=excp)

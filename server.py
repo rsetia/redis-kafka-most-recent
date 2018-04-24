@@ -7,7 +7,6 @@ import time
 
 def run():
 	while 1: 
-		print("bar")
 		word_entry = { "user_id": "1", "word": "orange" }
 		db.insert_word(word_entry)
 		redis_words.push_word_entry(word_entry)
@@ -18,13 +17,11 @@ def run():
 		time.sleep(2)
 
 def main():
-	print("foo")
 	consumer_process = Process(target=consumer.bootstrap)    
 	consumer_process.start()
 	run_process = Process(target=run)
 	run_process.start()
 	#consumer_process.join()
-	print("foo")
 if __name__ == "__main__":
     main()
 
