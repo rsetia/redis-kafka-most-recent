@@ -29,7 +29,7 @@ def run():
 		db.insert_word(word_entry)
 
 		result = get_recent_words(1)
-		mapped = list(map(lambda x: x['created_at'].strftime("%Y-%m-%d:%H-%M-%S"), result))
+		mapped = list(map(lambda x: x['created_at'], result))
 		for i in mapped:
 			print(i)
 		time.sleep(2)

@@ -2,6 +2,7 @@ import random
 import redis
 import time
 import json
+import datetime
 
 current_milli_time = lambda: int(round(time.time() * 1000))
 
@@ -16,6 +17,10 @@ def get_latest_words(user_id):
 
 add_word_and_trim_script = None
 
+def myconverter(o):
+    if isinstance(o, datetime.datetime):
+        return o.__str__()
+ 
 def push_word_entry(word_entry):
 	global add_word_and_trim_script
 
@@ -29,7 +34,7 @@ def push_word_entry(word_entry):
 	
 	key = get_key(word_entry["user_id"])
 	score = current_milli_time()
-	member = word_entry
+	member = json.dumps(word_entry, default = myconverter)
 	max_size = 3 
 	trim = -1 * (max_size + 1)
 	return add_word_and_trim_script(keys=[key], args=[score, member, trim])
