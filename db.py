@@ -13,13 +13,11 @@ def get_connection():
 	return connection
 
 def insert_word(word_entry):
-	print(f"insert_word: {word_entry}")
 	user_id = word_entry.user_id
 	word = word_entry.word
 	entered_at = word_entry.entered_at.strftime('%Y-%m-%dT%H:%M:%S')
 	connection = get_connection()
 	inserted_id = 0
-	print(f"entered_at: {entered_at}")
 	with connection.cursor() as cursor:
 		# Create a new record
 		sql = "INSERT INTO `word_entries` (`user_id`, `word`, `entered_at`) VALUES (%s, %s, %s)"

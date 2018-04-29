@@ -17,10 +17,9 @@ def bootstrap():
         #	                                  message.offset, message.key,
          #   	                              message.value))
 	
-		print(f"message.value: {message.value}")
 		word_entry = WordEntry.from_json(message.value)
 		user_id = word_entry.user_id
 
 		if ab.user_in_test(user_id, test):
-			print("CONSUMER: pushing")
+			print(f"CONSUMER: pushing {word_entry}")
 			redis_words.push_word_entry(word_entry) 

@@ -14,7 +14,6 @@ def get_recent_words(user_id):
 	if ab.user_in_test(user_id, test):
 		print("GET_RECENT: REDIS")
 		recents = redis_words.get_latest_words(user_id)
-		print(recents)
 		return recents
 	else:
 		print("GET_RECENT: DB")
@@ -28,11 +27,9 @@ def run():
 	while 1:
 		word_entry = WordEntry(None, "1", "orange", datetime.datetime.utcnow())
 		word_entry = db.insert_word(word_entry)
-		print(f"insert_word: {word_entry}")
 		producer.produce_word_entry(word_entry)
 
 		result = get_recent_words(1)
-		print(f"result: {result}")
 		mapped = list(map(lambda x: x.entered_at, result))
 		for i in mapped:
 			print(i)

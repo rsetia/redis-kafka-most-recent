@@ -19,10 +19,6 @@ class WordEntry:
 	@staticmethod
 	def from_json(json_str):
 		obj = json.loads(json_str)
-		
-		print(f"isstring: {isinstance(obj, str)}")
-		print(f"from_json obj: {obj}")
-		print(f"entered_at: {obj['entered_at']}")
 		entered_at = datetime.datetime.strptime(obj["entered_at"], '%Y-%m-%dT%H:%M:%S')
 		return WordEntry(obj["id"], obj["user_id"], obj["word"], entered_at) 
 	
