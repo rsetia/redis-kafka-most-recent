@@ -3,6 +3,7 @@ import redis
 import time
 import json
 import datetime
+from word_entry import WordEntry
 
 current_milli_time = lambda: int(round(time.time() * 1000))
 
@@ -13,7 +14,7 @@ def get_key(user_id):
 	return f"recent_words:{user_id}"
 
 def get_latest_words(user_id):
-	return list(map(lambda x: json.loads(x), r().zrevrange(get_key(user_id), 0, 5)))
+	return list(map(lambda x: WordEntry.from_json(x), r().zrevrange(get_key(user_id), 0, 5)))
 
 add_word_and_trim_script = None
 
