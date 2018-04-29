@@ -17,10 +17,6 @@ def get_latest_words(user_id):
 
 add_word_and_trim_script = None
 
-def myconverter(o):
-    if isinstance(o, datetime.datetime):
-        return o.__str__()
- 
 def push_word_entry(word_entry):
 	global add_word_and_trim_script
 
@@ -32,9 +28,9 @@ def push_word_entry(word_entry):
 			return value"""
 		add_word_and_trim_script = r().register_script(lua)
 	
-	key = get_key(word_entry["user_id"])
+	key = get_key(word_entry.user_id)
 	score = current_milli_time()
-	member = json.dumps(word_entry, default = myconverter)
+	member = word_entry.to_json()
 	max_size = 3 
 	trim = -1 * (max_size + 1)
 	return add_word_and_trim_script(keys=[key], args=[score, member, trim])

@@ -4,8 +4,9 @@ import word_entry_producer as producer
 import db
 import redis_words
 import time
+import datetime
 import redis_ab as ab 
-
+from word_entry import WordEntry
 
 test = "word_entry_recent"
 
@@ -25,18 +26,21 @@ def get_recent_words(user_id):
 
 def run():
 	while 1: 
-		word_entry = { "user_id": "1", "word": "orange" }
-		db.insert_word(word_entry)
+		word_entry = WordEntry(None, "1", "orange", datetime.datetime.utcnow())
+		word_entry = db.insert_word(word_entry)
+		print(f"insert_word: {word_entry}")
+		producer.produce_word_entry(word_entry)
 
 		result = get_recent_words(1)
-		mapped = list(map(lambda x: x['created_at'], result))
-		for i in mapped:
-			print(i)
+#		print(f"result: {result}")
+#		mapped = list(map(lambda x: x['entered_at'], result))
+#		for i in mapped:
+#			print(i)
 		time.sleep(2)
 
 def main():
-	consumer_process = Process(target=consumer.bootstrap)    
-	consumer_process.start()
+#	consumer_process = Process(target=consumer.bootstrap)    
+#	consumer_process.start()
 	run_process = Process(target=run)
 	run_process.start()
 	#consumer_process.join()
