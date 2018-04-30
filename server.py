@@ -7,6 +7,7 @@ import time
 import datetime
 import redis_ab as ab 
 from word_entry import WordEntry
+from flask import Flask
 
 test = "word_entry_recent"
 
@@ -41,8 +42,9 @@ def main():
 	run_process = Process(target=run)
 	run_process.start()
 	#consumer_process.join()
-if __name__ == "__main__":
-    main()
 
-
-
+main()
+app = Flask(__name__)
+@app.route('/')
+def hello_world():
+    return 'Hello, World!'
