@@ -52,3 +52,16 @@ def hello_world():
 	user_id = request.headers["user_id"]
 	recents = get_recent_words(user_id)
 	return jsonify(list(map(lambda x: x.to_obj(), recents)))
+
+@app.route('/words', methods=['POST'])
+def create_word():
+	content = request.get_json()
+	print(content)
+	user_id = content['user_id']
+	word = content['word']
+	entered_at = datetime.datetime.strptime(content['entered_at'], "%Y-%m-%dT%H:%M:%S")
+	word_entry = WordEntry(None, user_id, word, entered_at)
+	db.insert_word(word_entry)
+	producer.produce_word_entry(word_entry)
+	return ""
+	
