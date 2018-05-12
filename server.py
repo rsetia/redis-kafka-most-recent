@@ -26,26 +26,11 @@ def get_recent_words(user_id):
 		ab.add_user_to_test(user_id, test)
 		return recents
 
-def run():
-	while 1:
-		word_entry = WordEntry(None, "1", "orange", datetime.datetime.utcnow())
-		word_entry = db.insert_word(word_entry)
-		producer.produce_word_entry(word_entry)
-
-		result = get_recent_words(1)
-		mapped = list(map(lambda x: x.entered_at, result))
-		for i in mapped:
-			print(i)
-		time.sleep(2)
-
 def main():
 	consumer_process = Process(target=consumer.bootstrap)    
 	consumer_process.start()
-	run_process = Process(target=run)
-	run_process.start()
-	#consumer_process.join()
 
-# main()
+main()
 app = Flask(__name__)
 @app.route('/words/recent', methods=['GET'])
 def hello_world():
