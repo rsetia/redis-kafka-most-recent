@@ -8,6 +8,8 @@ import datetime
 import redis_ab as ab 
 from word_entry import WordEntry
 from flask import Flask
+from flask import request
+from flask import jsonify
 
 test = "word_entry_recent"
 
@@ -43,8 +45,10 @@ def main():
 	run_process.start()
 	#consumer_process.join()
 
-main()
+# main()
 app = Flask(__name__)
-@app.route('/')
+@app.route('/words/recent', methods=['GET'])
 def hello_world():
-    return 'Hello, World!'
+	user_id = request.headers["user_id"]
+	recents = get_recent_words(user_id)
+	return jsonify(list(map(lambda x: x.to_obj(), recents)))

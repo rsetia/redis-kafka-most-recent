@@ -6,6 +6,15 @@ def myconverter(o):
 		return o.strftime('%Y-%m-%dT%H:%M:%S')
 
 class WordEntry:
+
+	def to_obj(self):
+		return {
+			"id" : self._id,
+			"user_id" : self._user_id,
+			"word" : self._word,
+			"entered_at" : self._entered_at
+		}
+	
 	def to_json(self):
 		obj = {
 			"id" : self._id,
