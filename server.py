@@ -10,21 +10,35 @@ from word_entry import WordEntry
 from flask import Flask
 from flask import request
 from flask import jsonify
+import statsd
+
+stats = statsd.StatsClient('localhost', 8125)
 
 test = "word_entry_recent"
 
+@stats.timer("grw_redis")
+def get_recent_words_from_redis(user_id):
+	return redis_words.get_latest_words(user_id)
+
+
+@stats.timer("grw_db")
+def get_recent_words_from_db(user_id):
+	recents =  db.get_recent_words(user_id) 
+	for r in reversed(recents): 
+		redis_words.push_word_entry(r)	
+	return recents
+	
+	
 def get_recent_words(user_id):
 	if ab.user_in_test(user_id, test):
 		print("GET_RECENT: REDIS")
-		recents = redis_words.get_latest_words(user_id)
-		return recents
+		recents = get_recent_words_from_redis(user_id)
 	else:
 		print("GET_RECENT: DB")
-		recents =  db.get_recent_words(user_id) 
-		for r in reversed(recents): 
-			redis_words.push_word_entry(r)	
+		recents = get_recent_words_from_db(user_id)
 		ab.add_user_to_test(user_id, test)
-		return recents
+	
+	return recents
 
 def main():
 	consumer_process = Process(target=consumer.bootstrap)    
