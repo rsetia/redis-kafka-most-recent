@@ -16,7 +16,7 @@ services:
     environment:
        MYSQL_ROOT_PASSWORD: root
     volumes:
-      - ./vols/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
+      - ./docker/vols/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
   redis:
     image: redis
     ports:
